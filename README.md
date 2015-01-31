@@ -49,6 +49,10 @@ Time: From looking are different crimes and when they took place I saw that in g
 ![](/fig/Time.png)
 
 It is strange why there is a peak in both 12AM and 12PM with a very high correlation between the category count of them together(0.98),
-but I didn't find any bias that I could think of (looks like that over years and months).
+but I didn't find any bias that I could think of (looks like that over years and months) the peak is from the "white collar" but data looks fine and consistent.
+
+![](fig/Cat-TimeFreq.png)
+
+
 
 
