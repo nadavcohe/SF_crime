@@ -13,7 +13,7 @@
 
 #Introduction to data set
 
-The data set have 976731 records,
+The data set have 976,731 records,
 For each record we have the following columns:
 
 ![](/fig/data_set_into.jpg)
@@ -83,7 +83,9 @@ show_on_geo_net(map,s_data,cat_filter,div_desc=F,filename)
 #Results
 
 ![](fig/Year.png)
-(one month in 09 is missing
+(one month in 09 is missing)
+
 ![](fig/Month.png)
 
+![](fig/Days.png)
 
