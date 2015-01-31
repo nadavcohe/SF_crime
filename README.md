@@ -85,7 +85,18 @@ show_on_geo_net(map,s_data,cat_filter,div_desc=F,filename)
 ![](fig/Year.png)
 (one month in 09 is missing)
 
+![](fig/Cat-YearFreq.png)
+
+![](fig/Cat-Year.png)
+
 ![](fig/Month.png)
 
 ![](fig/Days.png)
+
+![](fig/Cat-Days.png)
+
+![](fig/Cat-DaysFreq.png)
+
+![](fig/Cat-TimeFreq.png)
+
 
