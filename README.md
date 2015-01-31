@@ -1,7 +1,7 @@
 ### San Francisco Crime Analysis
 
-By : Nadav Cohen
-========
+**By : Nadav Cohen**
+
 
 #Overview
 1. Background
@@ -45,4 +45,10 @@ WHITE COLLAR, WARRANTS, THEFT, DRUG/NARCOTIC, ALCOHOL RELATED, SEX, NON-CRIMINAL
 After the change the categories are now more robust and distinguished.
 ![](/fig/Cat.png)
 
+Time: From looking are different crimes and when they took place I saw that in general the "crime day" ends at around 5AM and then start again, as you can see from the figure:
 ![](/fig/Time.png)
+
+It is strange why there is a peak in both 12AM and 12PM with a very high correlation between the category count of them together(0.98),
+but I didn't find any bias that I could think of (looks like that over years and months).
+
+
