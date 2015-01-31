@@ -1,5 +1,6 @@
 ### San Francisco Crime Analysis
-**By : Nadav Cohen**
+
+By : Nadav Cohen
 ========
 
 #Overview
@@ -9,3 +10,5 @@
   a. Based of numbers
   b. Based of geography
 4. Other directions
+
+![](/fig/Time.png=1000x2200)
