@@ -62,15 +62,23 @@ but I didn't find any bias that I could think of (looks like that over years and
 
 #Basic functions
 To make life easier and in the spirit of the company I created simple functions that enable you to create figures for this data set fast,
-if you want to see distribution of one column or two, you can just write down the names of the columns and you will get a figure (barplot/heatmap) also you can change the scale of the count to log-scale or frequency.
+if you want to see distribution of one column or two, you can just write down the names of the columns and you will get a figure (barplot/heatmap) also you can change the scale of the count to log-space or frequency.
 ```R
 #scale_change:
 #0 = no change.
 #1 = log space.
-#2 = freq.
+#2 = frequency.
 generate_fig(s_data,cat_filter,scale_change=0,clust_dim_two=T,sortPlot=F,file_name=NULL)
 ```
-
+Another function is for geographical exploration, here you can enter you desired category and the output will be all a grid on SF that each point will represent the number of crimes from that category, as the number of crimes rises the size and colour of the point changes from green to red.
+```R
+#show_on_geo_net
+#map = map object of SF (loaded each time your source the R file)
+#sCat = Category to be selected (like "THEFT")
+#div_desc = if you want seperate figure for each Description (like T)
+#fileName = name of the figure file
+show_on_geo_net(map,s_data,sCat,div_desc=F,fileName)
+```
 
 #Results
 
