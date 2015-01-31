@@ -1,5 +1,6 @@
 ### San Francisco Crime Analysis
-## By : Nadav Cohen
+**By : Nadav Cohen**
+========
 
 #Overview
 1. Background
