@@ -7,8 +7,19 @@ By : Nadav Cohen
 1. Background
 2. Introduction to data set
 3. Results 
-  a. Based of numbers
-  b. Based of geography
+  * Based of numbers
+  * Based of geography
 4. Other directions
 
-![](/fig/Time.png=1000x2200)
+#Introduction to data set
+
+The data set have 976731 records,
+For each record we have the following columns:
+
+![](/fig/data_set_into.jpg)
+
+As you can see in the table, some columns data was changed for the analysis.
+
+
+
+![](/fig/Time.png)
