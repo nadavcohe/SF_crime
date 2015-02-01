@@ -54,12 +54,12 @@ There are 10 police stations in SF:
 some are more active then others:
 ![](/fig/PdDistrict.png)
 
-There are crimes that do not have PdDistrict, this is because they are "out of town" or "unknown" we will discard them
+There are crimes that do not have PdDistrict, this is because they are "out of town" or "unknown" we will discard them.
 
 Time: 
 From looking at different crimes and when they took place I saw that in general the "crime day" ends at around 5AM and then start again, as you can see from the figure:
 ![](/fig/Time.png)
-thus I shifted 0:5 to 24:29, also this can help as with different regressions.
+thus I shifted 0:5 to 24:29, this can also help us with different regressions later.
 ![](fig/Cat-TimeFreq.png)
 It is strange that there is a peak in both 12AM and 12PM with a very high correlation between the category count of them together(0.98),
 but I didn't find any bias that I could think of (looks like that over years and months) the peak is from the "white collar" but data looks fine and consistent.
@@ -83,19 +83,22 @@ Another function is for geographical exploration, here you can enter you desired
 #filename = name of the figure file
 show_on_geo_net(map,s_data,cat_filter,div_desc=F,filename)
 ```
+Most figures here were created using this functions.
 
 #Results
-**Based on numbers**
+**Based on numbers:**
+Our first question is, is there a decline in crime over the year?
+To answer this we first look of the crime count over the years
 ![](fig/Year.png)
-(one month in 09 is missing)
-
-
+it looks like there is a gentle decline with a big one from 2008 to 2009, by looking at the year with the different months:
+![](fig/Month-Year.png)
+We can see that 2009 has missing months as July has no crimes and May also have a small number (2965 VS average of  8400)
 ![](fig/Cat-YearFreq.png)
 
 ![](fig/Cat-Year.png)
-decline in crime ?
+
 The year 2009 is shot of a month (June)
-![](fig/Month-Year.png)
+
 in average there is 8,482 crimes each month, thus in total 2009 will have ~ 101,784 crimes
 fitting the standard linear regression model for the number of crimes between 2003-2009 results with a significant trend of -1845 less crimes each year. The trend can be observed from the plot: 
 ![](fig/declineCrime.png)
