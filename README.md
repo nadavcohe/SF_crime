@@ -143,80 +143,77 @@ Here we are looking at the frequency of each crime type over each day of the wee
 3. "Sex" is an outlier with a significantly higher rate from Tuesday to Friday and lower rates on weekends and Mondays.
 
 Conclusion:
-The police should know what crimes to expect each day and build its force accordantly. 
+Each group of crimes has a unique pattern and therefore can be monitored accordingly. 
 
-Crime and hour in the day, we already touched upon the hour Issue
+Crime and hour during the day, is discussed above.
 ![](fig/Cat-TimeFreq.png)
 
-Is there an association of crime and time in the day?
-Here is the different categories and there different hour distributions:
+Is there an association between crime and time during the day?
+Following, is a distribution plot of the different crime categories and hours:
 ![](fig/multiCat_Time.png)
-as we can see, most crimes take place from noom till the early night, crimes that are different are:
+As we can see, most crimes take place from noon till the early hours of the night. Crimes with different patterns are:
 
-1. sex and vandalism are more from after noon till night
-2. non-criminal, white collar and trespass take place in early morning till after noon
+1. Sex crimes and vandalism occur more frequently from late noon till night time.
+2. Non-criminal, white collar and trespassing take place more frequently during the early morning till the afternoon.
 
-I will conclude the segment will other things about association of crime category and other parameters:
+I will conclude this segment by associating crime categories with other parameters:
 ![](fig/Cat-PdDistrict.png)
-As we can see and already know, theft and non-criminal are the majority of police business. this is true for all stations and in particular  to the most active ones southern are mission, with oner expectation of drugs and tenderloin station.
-If we look at the frequency of crime over the stations:
+As we can see and already know, theft and non-criminal are occupy the majority of police activities. This is true for all stations and in particular to the most active ones: Southern and Mission, with one expectation of drugs and Tenderloin station.
+If we look at the proportion of crime categories per station:
 ![](fig/Cat-PdDistrictFreq.png)
-we see that most sex crimes are handled by mission station, and this is also the case with drugs and tenderloin station although mission and southern  are also very active.
-beyview and ingleside deal more with weapon laws and family issues then others.
+We see that most sex crimes are handled by Mission station, and this is also the case with drugs in Tenderloin station, although Mission and Southern  are also very active.
+Bayview and Ingleside deal more frequently with weapon laws and family issues then other stations.
 
-Another final thing that I tried to do is to find out if I can predict if a crime had a resolution, to do that I used bagging,
-and got 88% accuracy, I didn't have time to investigate that feature help to achieve this results 
+I tried to find out if I can predict for a random crime record the crime resolution. To do that I used bagging with classification trees,
+and got 88% accuracy. I didn't have time to fully investigate which feature is significant in determining the resolution. 
 
 **Based on geography**
-One thing that was interesting to me is what can I learn from the geographical of crime.
-I build a grid of points all across SF and associated each crime to the nearest point to him, fox example:
+One thing that was interesting is whether crime geography can be inferred.
+I built a grid of points all across SF and associated each crime to the nearest geographical point of occurrence, for example:
 
 ![](fig/SEX_SOLICITS.TO.VISIT.HOUSE.OF.PROSTITUTION.png)
 
-Here are all the crimes on the grid:
+Following is a plot of all the crimes on the grid:
 ![](fig/gridAllCrime.png)
 
-as you can see, most crime takes place in the northern east of the city, this is known to be the more active side of the city:
+As we can see, most crimes take place in the northern east of the city. This is known to be the more active part of the city:
 ![](fig/SF_residentsPerSquare.jpg)
 ![](fig/SF_rental_cost.jpg)
 
-I broke categories to there different descriptions to see if I get different geographical picture and I got nice results:
-here you can see cocaine distribution:
+I broke categories to three different descriptions to see if I get different geographical results:
+Cocaine distribution:
 ![](fig/drug_POSSESSION.OF.BASE.ROCK.COCAINE.FOR.SALE.png)
-And here marijuana:
+Marijuana distribution:
 ![](fig/drug_POSSESSION.OF.MARIJUANA.png)
-You clearly see that cocaine use is in a specific location and this is opposite to marijuana that is more "all over the place"
-another example is robbery:
+We clearly see that cocaine use is more common in a specific location in contrast to marijuana that is more "all over the place".
+Another example is robbery:
 ![](fig/ROBBERY.png)
-While in general robbery is all across SF, you can see that some types of robberies are more common in specific locations
+While in general robbery occurs all across SF, we can see that some types of robberies are more common in specific locations:
 ![](fig/ROBBERY_BURGLARY.OF.APARTMENT.HOUSE..UNLAWFUL.ENTRY.png)
 VS
 ![](fig/ROBBERY_BURGLARY.OF.RESIDENCE..FORCIBLE.ENTRY.png)
 
 Distance from police stations:
-Another interesting thing I came across was a negative correlation between number of crimes that a station took care of and the distance, meaning that there might be a tendency for the station police man to work closer to the station.
-I calculated this be calculating the euclidean distance on each crime and the location of it's police station. and counted in number of crimes in each distance (~100M)
-cor:
+Another interesting thing I came across is a positive correlation between the amount of crimes that a station handled and the distance, meaning that there might be a tendency for the station police officers to work closer to the station.
+I calculated this by the euclidean distance of each crime from the location of the relevant police station, and allotted them to bins of distances (~100M per bin).
+Although the correlations are positive, they are fairly weak and so cannot be used for inference.
 
 **K-Means**
-To conclude my work I asked Is there similar crime clusters across SF?
-you answer that I counted the number of crimes in each point and tried to cluster it using k-mean
-each point have a vector of all crimes that took place inside, and run the k-means twice:
-once of raw count:
+To conclude my work I asked if there are crime clusters across geographic locations SF?
+To answer that I counted the number of crimes in each point and tried to cluster it using k-mean.
+Each point has a vector of all crimes that took place in it. After running the k-means twice:
+Once for raw count:
 ![](fig/gCluster.png)
-here you can see each cluster crime distribution:
+Here we can see each cluster crime distribution:
 ![](fig/gClusterBarPlot.png)
-and another of frequency in the point :
+And another for proportion of crime in the point :
 ![](fig/gClusterFreq.png)
-here you can see each cluster crime distribution:
+Here we can see each cluster crime distribution:
 ![](fig/gClusterBarPlotFreq.png)
 The results in general are very similar.
-
-#Things that didn't work
-1. KNN
-2. Logistic regression
+We can clearly see that some crime types are more common in certain areas than others.
 
 #Other directions
 1. Bayesian network
 2. Finding more biases in the data
-3. Crossing with other DB (airbnb, poverty, health, temperature, court)
+3. Crossing with other DBs (airbnb, poverty, health, temperature, court)
