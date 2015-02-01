@@ -91,7 +91,9 @@ show_on_geo_net(map,s_data,cat_filter,div_desc=F,filename)
 
 ![](fig/Cat-Year.png)
 decline in crime ?
-The year 2009 is shot of a month (June) in average there is 8,482 crimes each month, thus in total 2009 will have ~ 101,784 crimes
+The year 2009 is shot of a month (June)
+![](fig/Month-Year.png)
+in average there is 8,482 crimes each month, thus in total 2009 will have ~ 101,784 crimes
 fitting the standard linear regression model for the number of crimes between 2003-2009 results with a significant trend of -1845 less crimes each year. The trend can be observed from the plot: 
 ![](fig/declineCrime.png)
 The model significance vs. the use of the average (= not fitting a model) results with a p-value of 0.0075

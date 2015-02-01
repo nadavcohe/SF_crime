@@ -29,8 +29,8 @@ data_load_prep <- function(){
   s_data=as.data.frame(s_data);
   #removing offer-offenses data, as from menully going over them this is not relevent to our case.
   #removing non-criminal data, as this is not relevent to our case
-  category_to_remove=c("NON-CRIMINAL","OTHER OFFENSES","RUNAWAY","RECOVERED VEHICLE","MISSING PERSON","SUICIDE","PORNOGRAPHY/OBSCENE MAT","SUSPICIOUS OCC","LOITERING")
-  s_data$Category=plyr::mapvalues(x =s_data$Category,from = category_to_remove,to = rep("NON-CRIMINAL",length(category_to_remove)) )
+  NON_CRIMINAL=c("NON-CRIMINAL","OTHER OFFENSES","RUNAWAY","RECOVERED VEHICLE","MISSING PERSON","SUICIDE","PORNOGRAPHY/OBSCENE MAT","SUSPICIOUS OCC","LOITERING")
+  s_data$Category=plyr::mapvalues(x =s_data$Category,from = NON_CRIMINAL,to = rep("NON-CRIMINAL",length(NON_CRIMINAL)) )
   s_data$Category=plyr::mapvalues(x =s_data$Category,from = c("FORGERY/COUNTERFEITING", "FRAUD", "BAD CHECKS"),to=rep("FRAUD",3))
   s_data$Category=plyr::mapvalues(x =s_data$Category,from = c("BURGLARY", "ROBBERY", "STOLEN PROPERTY", "EXTORTION"),to=rep("ROBBERY",4))
   s_data$Category=plyr::mapvalues(x =s_data$Category,from = c("LARCENY/THEFT", "VEHICLE THEFT", "EMBEZZLEMENT"), to= rep("THEFT",3))
@@ -65,17 +65,18 @@ data_load_prep <- function(){
 }
 attr(data_load_prep, "help") <-"this function will load and pre-process this csv file"
 
-#scale_change:
-#0 = no change.
-#1 = log space.
-#2 = freq.
-generate_fig <- function(s_data,cat_filter,scale_change=0,clust_dim_two=T,sortPlot=F,file_name=NULL){
-  if (length(cat_filter)>2 || length(cat_filter)==0){
-    message("error in cat_filter");
+#col_filter =  columns to be selected (like "Category" or c("Category","Time"))
+#scale_change = (0 = no change);(1 = log space) (2 = Frequency)
+#clust_dim_two = if you selected two columns do you want to cluster the second one?
+#sortPlot = if you selecte only one column do you want the data to be sorted?
+#filename = name of the figure file
+generate_fig <- function(s_data,col_filter,scale_change=0,clust_dim_two=T,sortPlot=F,file_name=NULL){
+  if (length(col_filter)>2 || length(col_filter)==0){
+    message("error in col_filter");
     return(NULL);
   }
-  fig_data= tryCatch(expr=(fig_data<-table(s_data[cat_filter])),error = function(e) {
-    message("error in cat_filter-filter is not correct");
+  fig_data= tryCatch(expr=(fig_data<-table(s_data[col_filter])),error = function(e) {
+    message("error in col_filter-filter is not correct");
     return(NULL);
   });
   if (is.null(fig_data)){
@@ -89,14 +90,14 @@ generate_fig <- function(s_data,cat_filter,scale_change=0,clust_dim_two=T,sortPl
   # pValue=chisq.test(fig_data)$p.value;
   pValue=0;
   ylab="count";
-  figTitle= paste(paste(cat_filter,collapse = ","),chiStatus[(pValue>0.05)+1],sep="\n",collapse = ",");
+  figTitle= paste(paste(col_filter,collapse = ","),chiStatus[(pValue>0.05)+1],sep="\n",collapse = ",");
   
   if ((scale_change)==1){
     fig_data=log10(1+fig_data);
     ylab=paste(ylab,"(in log space)")
   }else if ((scale_change)==2){
     fig_data=prop.table(fig_data,1);
-    figTitle = paste(figTitle,"Freq of",cat_filter[1]);
+    figTitle = paste(figTitle,"Freq of",col_filter[1]);
   }
   
   
@@ -107,7 +108,7 @@ generate_fig <- function(s_data,cat_filter,scale_change=0,clust_dim_two=T,sortPl
       fig_data$Var1=factor(fig_data$Var1, levels = fig_data$Var1[order(fig_data$Freq)])
     };
     ggplot(fig_data, aes(Var1, Freq,fill=Freq)) + geom_bar(stat="identity", position="dodge") + 
-      xlab(cat_filter) + ggtitle(figTitle) + scale_fill_gradient(low="green",high="red") +
+      xlab(col_filter) + ggtitle(figTitle) + scale_fill_gradient(low="green",high="red") +
       geom_hline(aes(yintercept=median(Freq),color="blue")) + 
       theme(plot.title = element_text(lineheight=.8, face="bold"),axis.text.x = element_text(angle = 45, hjust = 1,face="bold",colour="black"),axis.text.y = element_text(face="bold",colour="black")) + 
       ggsave(paste0(file_name,".png"),width = 12,height = 8);
@@ -122,7 +123,7 @@ generate_fig <- function(s_data,cat_filter,scale_change=0,clust_dim_two=T,sortPl
       dendrogram="row";
       Colv=F;
     }
-    heatmap.2(fig_data,trace = "none",col=myColor,dendrogram = dendrogram ,Colv = Colv,xlab=cat_filter[2],margins = c(4, 8),main=figTitle,srtCol=25)
+    heatmap.2(fig_data,trace = "none",col=myColor,dendrogram = dendrogram ,Colv = Colv,xlab=col_filter[2],margins = c(4, 8),main=paste("HeatMap",figTitle,sep="\n"),srtCol=25)
     if (!is.null(file_name)){
       dev.off();
     }
@@ -152,6 +153,10 @@ create_all_figs <-function(s_data){
   generate_fig(s_data,c("PdDistrict","Category"),scale_change = 2,clust_dim_two=T,file_name = "fig/PdDistrict-CatFreq")
   generate_fig(s_data,c("Year","Category"),scale_change = 2,clust_dim_two=T,file_name = "fig/Year-CatFreq")
   generate_fig(s_data,c("Year","Category"),scale_change = 0,clust_dim_two=T,file_name = "fig/Year-Cat")
+  generate_fig(s_data,c("Year"),scale_change = 0,clust_dim_two=T,file_name = "fig/Year")
+  generate_fig(s_data,c("Month"),scale_change = 0,clust_dim_two=T,file_name = "fig/Month")
+  generate_fig(s_data,c("Month","Year"),scale_change = 0,clust_dim_two=F,file_name = "fig/Month-Year")
+  generate_fig(s_data,c("Month","Year"),scale_change = 2,clust_dim_two=F,file_name = "fig/Month-YearFreq")
   
   cat_time=prop.table(table(s_data$Category,s_data$Time),1);
   png("fig/multiCat_Time.png",800,600)
@@ -212,13 +217,16 @@ geograpical <- function(s_data){
   ggmap(map) + geom_point(aes(x = as.numeric(allCluster[,2]), y = as.numeric(allCluster[,3]), size = 3,colour=allCluster[,1]), alpha = .9)
 }
 
-
-
-create_geo_net <- function (map,s_data,sCat,div_desc=F,fileName){
-  get_map <- function(multiBox,fileName,div_desc=F){
+#show_on_geo_net
+#map = map object of SF (loaded each time your source the R file)
+#cat_filter = Category to be selected (like "THEFT")
+#div_desc = if you want seperate figure for each Description (like T)
+#filename = name of the figure file
+show_on_geo_net <- function (map,s_data,cat_filter,div_desc=F,filename){
+  get_map <- function(multiBox,filename,div_desc=F){
     if (div_desc){
-      fileName=paste(fileName,make.names(multiBox[1,3]),sep="_");
-      sCat=paste(sCat,multiBox[1,3]);
+      filename=paste(filename,make.names(multiBox[1,3]),sep="_");
+      cat_filter=paste(cat_filter,multiBox[1,3]);
     }
     multiBox=multiBox[,1:2];
     multiBox=rbind(multiBox,(cbind(1:(length(xtable)),rep(1:(length(ytable)),each=(length(xtable))))))
@@ -226,8 +234,8 @@ create_geo_net <- function (map,s_data,sCat,div_desc=F,fileName){
     allBoxes=data.frame(x=xtable,y=rep(ytable,each=length(xtable)),count=geoMatric);
     ggmap(map) + geom_point(data=allBoxes,aes(x = x, y = y, size = count,colour=count), alpha = .9) + scale_colour_gradient(low = "green",high="red") +
       # geom_polygon(data=df.sf_neighborhoods,aes(x=long,y=lat,group=group) ,fill="#404040",colour= "#5A5A5A", lwd=0.05) +
-      ggtitle(sCat) + theme(plot.title = element_text(lineheight=.8, face="bold")) + 
-      ggsave(file=paste0(fileName,".png"),width = 7,height = 7) ;
+      ggtitle(cat_filter) + theme(plot.title = element_text(lineheight=.8, face="bold")) + 
+      ggsave(file=paste0(filename,".png"),width = 7,height = 7) ;
   }
   s_data=s_data[s_data$Longitude!=0,];
   xmin = min(s_data$Longitude)
@@ -237,7 +245,7 @@ create_geo_net <- function (map,s_data,sCat,div_desc=F,fileName){
   xtable=seq(xmin,xmax+10^-2,10^-2)
   ytable=seq(ymin,ymax+10^-2.5,10^-2.5)
   
-  s_data=subset(s_data,Category==sCat)
+  s_data=subset(s_data,Category==cat_filter)
   multiBox=cbind(.bincode(s_data$Longitude,xtable,include.lowest = T),.bincode(s_data$Latitude,ytable,include.lowest = T))
   s_data$Cell=paste(multiBox[,1],multiBox[,2],sep=",")
   tableForKM=prop.table(table(s_data$Cell,s_data$Category),1)
@@ -262,13 +270,11 @@ create_geo_net <- function (map,s_data,sCat,div_desc=F,fileName){
     # browser()
      multiBox=multiBox[multiBox$Descript %in% names(which((table(multiBox$Descript))>3000)),]
      multiBox$Descript=factor(multiBox$Descript);
-    toDelete=by(multiBox,multiBox$Descript,get_map,fileName=fileName,div_desc=T)
+    toDelete=by(multiBox,multiBox$Descript,get_map,filename=filename,div_desc=T)
   }else{
-    get_map(multiBox,fileName)
+    get_map(multiBox,filename)
   }
-  
 
-  
   # allBoxX=data.frame(x=rep(xtable,2),y=c(ymin,ymax));
   # allBoxY=data.frame(x=c(xmin,xmax),y=rep(ytable));
   # ggmap(map) + geom_line(data=allBoxX, inherit.aes=FALSE, aes(x = x,y =y, size = 3) ,alpha = .5) + 
@@ -283,7 +289,7 @@ hist_dist <- function(x,breaks){
   hist(x,breaks =breaks,plot=F)$count
 }
 
-radios_police <- function(s_data,sCat){
+radios_police <- function(s_data,cat_filter){
   # options(digits=12)
   # knn on all points deside how many points 
   #not cool enogh
@@ -295,7 +301,7 @@ radios_police <- function(s_data,sCat){
   police$Latitude=as.numeric(police$Latitude);
   police$Longitude=as.numeric(police$Longitude);
   ggmap(map) + geom_point(data=police,aes(x = Longitude, y =Latitude ,colour=PdDistrict,size=16)) + ggsave(file="fig/policeOnMap.png",width = 7,height = 7)
-  s_data=subset(s_data,Category==sCat)
+  s_data=subset(s_data,Category==cat_filter)
   s_data=s_data[!(s_data$PdDistrict==""),]
   s_data=s_data[!(s_data$Longitude==0),]
   s_data$PdDistrict=factor(s_data$PdDistrict);
