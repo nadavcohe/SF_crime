@@ -99,6 +99,9 @@ show_on_geo_net(map,s_data,cat_filter,div_desc=F,filename)
 
 ![](fig/Cat-TimeFreq.png)
 
+Different Categories have different hour distributions
+![](fig/multiCat_Time.png)
+
 **Based on geography**
 ![](fig/ROBBERY.png)
 
