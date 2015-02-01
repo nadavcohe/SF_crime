@@ -86,30 +86,36 @@ show_on_geo_net(map,s_data,cat_filter,div_desc=F,filename)
 ![](fig/Year.png)
 (one month in 09 is missing)
 
+
 ![](fig/Cat-YearFreq.png)
 
 ![](fig/Cat-Year.png)
+decline in crime ?
+Conclusion
 
 ![](fig/Month.png)
+Association of crime and month?
 
 ![](fig/Days.png)
 
 ![](fig/Cat-Days.png)
 
 ![](fig/Cat-DaysFreq.png)
-
+Association of crime and day?
 ![](fig/Cat-TimeFreq.png)
 
+Association of crime and time in the day?
 Different Categories have different hour distributions
 ![](fig/multiCat_Time.png)
 
 **Based on geography**
 ![](fig/ROBBERY.png)
-
+Is there a different geographical distribution for different crimes in the same  Category?
 ![](fig/drug_POSSESSION.OF.BASE.ROCK.COCAINE.FOR.SALE.png)
 ![](fig/drug_POSSESSION.OF.MARIJUANA.png)
 
 **K-Means**
+Is there similar crime clusters across SF?
 ![](fig/gCluster.png)
 ![](fig/gClusterBarPlot.png)
 
