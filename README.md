@@ -9,7 +9,8 @@
 3. Results 
   * Based on numbers
   * Based on geography
-4. Other directions
+4. Things that didn't work
+5. Other directions
 
 #Introduction to data set
 
