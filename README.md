@@ -101,9 +101,10 @@ The model significance vs. the use of the average (= not fitting a model) result
 That result should be taken with care though - standard regression model assumes the observations are independent samples from the same distribution, which is not the case here, as we have a time-series, where there is a dependency between the years.
 Conclusion:
 There is a decline in crime, but its not clear how strong it is, in next steps we will try to find the cause.
-This is the data with the adding of crime to 2009, the blue line the regression line:
+This is the data with the adding of crime to 2009, the blue line is the regression line:
 ![](fig/YearReg.png)
 
+Next I wanted to know is there is a change over crime type over the years:
 
 ![](fig/Cat-Year.png)
 
