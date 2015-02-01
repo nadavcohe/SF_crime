@@ -93,18 +93,23 @@ To answer this we first look of the crime count over the years
 it looks like there is a gentle decline with a big one from 2008 to 2009, by looking at the year with the different months:
 ![](fig/Month-Year.png)
 We can see that 2009 has missing months as July has no crimes and May also have a small number (2965 VS average of  8400)
-In average there is 8,482 crimes each month in 2009, thus we can add the missing month crimes to the total in 2009 and we will ~ 101,784 crimes, this is only an approximation and not including the probably missing data in may
-fitting the standard linear regression model for the number of crimes between 2003-2009 results with a significant trend of -2894 less crimes each year. The trend can be observed from the plot: 
+In average there is 8,482 crimes each month in 2009, thus we can add the missing month crimes to the total in 2009 and we will ~ 101,784 crimes, this is only an approximation and not including the probably missing data in may.
+Using chi-square test it's clear that there is dependences between crime and year.
+Next I tried fitting the standard linear regression model for the number of crimes between 2003-2009 results with a significant trend of -2894 less crimes each year. The trend can be observed from the plot: 
 ![](fig/declineCrime.png)
 The model significance vs. the use of the average (= not fitting a model) results with a p-value of 0.0075
 That result should be taken with care though - standard regression model assumes the observations are independent samples from the same distribution, which is not the case here, as we have a time-series, where there is a dependency between the years.
 Conclusion:
 There is a decline in crime, but its not clear how strong it is, in next steps we will try to find the cause.
+This is the data with the adding of crime to 2009, the blue line the regression line:
+![](fig/YearReg.png)
 
+
+![](fig/Cat-Year.png)
 
 ![](fig/Cat-YearFreq.png)
 
-![](fig/Cat-Year.png)
+![](fig/Year-CatFreq.png)
 
 
 
