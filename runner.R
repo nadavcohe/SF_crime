@@ -7,21 +7,20 @@ if (!exists("map")){
   map <- get_map(location = 'San Francisco', zoom = 12)
 }
 
-message("Welcome to analisys program for crime in SF")
+message("Welcome to analysis program for crime in SF")
 message("function list:\n
         data_load_prep - loading to csv file and pre-process\n
-        create_all_figs - generates interesting figures accroding to things i saw\n
-        generate_fig - generates figure according to diffrent paramaters from user\n
-        show_on_geo_net - generates map figure with amount of diffrent catergories\n
-        kmeans_on_map - runs kmeans on all points on map\n
+        create_all_figs - generates interesting figures according to things i saw\n
+        generate_fig - generates figure according to different parameters from user\n
+        show_on_geo_net - generates map figure with amount of different categories\n
+        kmeans_on_map - runs k means on all points on map\n
         for start to can load first the data : load(\"s_data\")\n
         ")
 
 
 #This function will load and pre-process the csv file
 #If the file is loaded, the function assumes all fields are correct
-#The function will return the veriable that contain all the data after the pre-process
-#explenation about the pre-process will be in the PPT
+#The function will return the variable that contain all the data after the pre-process
 data_load_prep <- function(){
   s_data=tryCatch(read.csv("sfpd_incident_2003-2011.csv",comment.char = ""),error=function(x){message("file not found")})
   if (is.null(s_data)){
@@ -29,8 +28,8 @@ data_load_prep <- function(){
   }
   colnames(s_data)[1]="IncidntNum"
   s_data=as.data.frame(s_data);
-  #removing offer-offenses data, as from menully going over them this is not relevent to our case.
-  #removing non-criminal data, as this is not relevent to our case
+  #removing other-offences data, as from manually going over them this is not relevant to our case.
+  #removing non-criminal data, as this is not relevant to our case
   NON_CRIMINAL=c("NON-CRIMINAL","OTHER OFFENSES","RUNAWAY","RECOVERED VEHICLE","MISSING PERSON","SUICIDE","PORNOGRAPHY/OBSCENE MAT","SUSPICIOUS OCC","LOITERING")
   s_data$Category=plyr::mapvalues(x =s_data$Category,from = NON_CRIMINAL,to = rep("NON-CRIMINAL",length(NON_CRIMINAL)) )
   s_data$Category=plyr::mapvalues(x =s_data$Category,from = c("FORGERY/COUNTERFEITING", "FRAUD", "BAD CHECKS"),to=rep("FRAUD",3))
@@ -44,7 +43,7 @@ data_load_prep <- function(){
   s_data$Category=factor(s_data$Category);
   #by looking on the raw data, we can see that there are duplicate IncidntNum, from the look of it, it's the unfolding event, but for now we dont need it.
   s_data <- subset(s_data, !duplicated(s_data$IncidntNum))
-  # seconds and minutes are not relevent for most statistics, we keep only hours
+  # seconds and minutes are not relevant for most statistics, we keep only hours
   s_data$Time=strptime((s_data$Time),"%I:%M:%S %p")
   s_data$Time=as.numeric(format(round(s_data$Time,units="hours"),"%H"))
   #i wanted that the night will be continues, from looking at the data, crime day start and 5, so i shifted the time accordenly
@@ -87,7 +86,7 @@ generate_fig <- function(s_data,col_filter,scale_change=0,clust_dim_two=T,sortPl
   if (is.null(fig_data)){
     return (NULL);
   }
-  #end of input error handeling
+  #end of input error handling
   # chiStatus=c("Category are Associated(non Uniform)","Category are not Associated(Uniform)")
   chiStatus="";
   # pValue=chisq.test(fig_data)$p.value;
@@ -195,7 +194,7 @@ create_all_figs <-function(s_data){
 
 }
 
-#this function will get all all crimes and assin each to a point in the map, next it will cluster them using k-means
+#this function will get all all crimes and assign each to a point in the map, next it will cluster them using k-means
 #prop = is you want to count of each crime to be the raw count or the proportion in the point
 kmeans_on_map <- function(map,s_data,prop=F,filename=""){
   s_data=s_data[s_data$Longitude!=0,];
@@ -203,7 +202,7 @@ kmeans_on_map <- function(map,s_data,prop=F,filename=""){
   xmax = max(s_data$Longitude)
   ymin = min(s_data$Latitude)
   ymax = max((s_data$Latitude))
-  #table of all points or refrence in the grid of SF
+  #table of all points or reference in the grid of SF
   xtable=seq(xmin,xmax+10^-2,10^-2)
   ytable=seq(ymin,ymax+10^-2.5,10^-2.5)
   multiBox=cbind(.bincode(s_data$Longitude,xtable,include.lowest = T),.bincode(s_data$Latitude,ytable,include.lowest = T))
@@ -280,7 +279,7 @@ hist_dist <- function(x,breaks){
   hist(x,breaks =breaks,plot=F)$count
 }
 
-#mesuring the distance of crimes from their stations
+#measuring the distance of crimes from their stations
 radios_police <- function(s_data,cat_filter){
   police=read.csv("PoliceStations.csv");
   police=as.data.frame(police)
@@ -306,8 +305,8 @@ radios_police <- function(s_data,cat_filter){
   return(apply(geoList,1,cor,y=41:1,method = "spearman"))
 }
 
-geograpical <- function(s_data){
-  #geograpical
+geographical <- function(s_data){
+  #geographical
   ############
   s_data=s_data[s_data$Longitude!=0,];
   allCluster=NULL
@@ -322,7 +321,7 @@ geograpical <- function(s_data){
   map <- get_map(location = 'San Francisco', zoom = 12)
   mapPoints <- ggmap(map) + geom_point(aes(x = Longitude, y = Latitude, size = 3,colour=Category), data = s_data[1:1000,], alpha = .5)
   mapPoints <- ggmap(map) + geom_rect(aes(xmin = min(s_data$Longitude),xmax=max(s_data$Longitude) , ymin = min(s_data$Latitude),ymax=max((s_data$Latitude)), size = 3), alpha = .5)
-  #Dangers neighborhood total and over time
+  #Dangers neighbourhood total and over time
   #connection between time and location 
   ggmap(map) + geom_point(aes(x = as.numeric(allCluster[,2]), y = as.numeric(allCluster[,3]), size = 3,colour=allCluster[,1]), alpha = .9)
 }
@@ -337,9 +336,9 @@ holidays_analisys <- function(s_data){
   chisq.test(cbind(as.numeric(onHoliday[, 1]) ,as.numeric(onHoliday[, 2]) ),simulate.p.value = 200);
 }
 
-### things that didnt work:
+### things that didn't work:
 dub_menage <- function(){
-  #dont remove dup, and see crime solving in diffrent places , not working
+  #don't remove dup, and see crime solving in different places , not working
   #Compare time of happened and solved
   #not time differ or location dif, or any.
   dub=unique(s_data$IncidntNum[duplicated(s_data$IncidntNum)])
