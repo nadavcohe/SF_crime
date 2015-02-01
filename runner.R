@@ -13,9 +13,9 @@ message("function list:\n
         create_all_figs - generates interesting figures accroding to things i saw\n
         generate_fig - generates figure according to diffrent paramaters from user\n
         show_on_geo_net - generates map figure with amount of diffrent catergories\n
-        kmeans_on_map - runs kmeans on all points on map
-        load(\"s_data\")
-        ....")
+        kmeans_on_map - runs kmeans on all points on map\n
+        load(\"s_data\")\n
+        ")
 
 
 #This function will load and pre-process the csv file
@@ -63,7 +63,8 @@ data_load_prep <- function(){
   names(s_data)[names(s_data)=="Y"] <- "Latitude";
   s_data=s_data[!(s_data$PdDistrict==""),];
   s_data$PdDistrict=factor(s_data$PdDistrict);
-  # s_data$PdDistrict=plyr::mapvalues(x =s_data$PdDistrict,from = c(""), to = "UNREPORTED")
+  s_data$Resolution[(s_data$Resolution == "NONE")|(s_data$Resolution == "NOT PROSECUTED")|(s_data$Resolution == "UNFOUNDED")]="NONE"
+  s_data$Resolution=factor(s_data$Resolution)
   save(s_data,file="s_data");
   return(s_data);
 }
@@ -152,6 +153,8 @@ create_all_figs <-function(s_data){
   generate_fig(s_data,c("Category","Year"),scale_change = 0,clust_dim_two=F,file_name = "fig/Cat-Year")
   generate_fig(s_data,c("Category","PdDistrict"),scale_change = 0,clust_dim_two=T,file_name = "fig/Cat-PdDistrict")
   generate_fig(s_data,c("Category","PdDistrict"),scale_change = 2,clust_dim_two=T,file_name = "fig/Cat-PdDistrictFreq")
+  generate_fig(s_data,c("Resolution","Category"),scale_change = 2,clust_dim_two=T,file_name = "fig/Res-CatProp")
+  generate_fig(s_data,c("Category","Resolution"),scale_change = 2,clust_dim_two=T,file_name = "fig/Cat-ResProp")
   generate_fig(s_data,c("PdDistrict","Category"),scale_change = 2,clust_dim_two=T,file_name = "fig/PdDistrict-CatFreq")
   generate_fig(s_data,c("Year","Category"),scale_change = 2,clust_dim_two=T,file_name = "fig/Year-CatFreq")
   generate_fig(s_data,c("Year","Category"),scale_change = 0,clust_dim_two=T,file_name = "fig/Year-Cat")
@@ -176,6 +179,11 @@ create_all_figs <-function(s_data){
   }
   dev.off()
   
+  kmeans_on_map(map,s_data,F,"kmeanRaw");
+  kmeans_on_map(map,s_data,T,"kmeanProp");
+  show_on_geo_net(map,s_data,"THEFT",T,"fig/theft");
+  
+  s_data=s_data[!(s_data$Year=="09"),]
   cat_time=prop.table(table(s_data$Category,s_data$Month),1);
   png("fig/multiCat_Month.png",800,600)
   par(mfrow=c(4,4))
@@ -184,9 +192,7 @@ create_all_figs <-function(s_data){
   }
   dev.off()
   
-  kmeans_on_map(map,s_data,F,"kmeanRaw");
-  kmeans_on_map(map,s_data,T,"kmeanProp");
-  show_on_geo_net(map,s_data,"THEFT",T,"fig/theft");
+
 }
 
 holidays_analisys <- function(s_data){
@@ -224,7 +230,7 @@ kmeans_on_map <- function(map,s_data,prop=F,filename=""){
   png(filename =paste0(filename,"BarPlot",".png"),1000,1000 )
   par(mfrow=c(2,3))
   for (i in 1:6){
-    barplot(colMeans(tableForKM[which(tableKM$class==i),]),main=paste0("g-",i),las=2,ylim=c(0,1))
+    barplot(colMeans(tableForKM[which(tableKM$class==i),]),main=paste0("Class-",i),las=2)
   }
   dev.off()
 }

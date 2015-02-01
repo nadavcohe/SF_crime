@@ -4,29 +4,27 @@
 
 
 #Overview
-1. Background
-2. Introduction to data set
-3. Results 
+1. Introduction to data set
+2. Data Analysis 
   * Based on numbers
   * Based on geography
-4. Things that didn't work
-5. Other directions
+3. Other directions
 
 #Introduction to data set
 
-The data set has 976,731 records,
-for each record we have the following columns:
+The data set has 976,731 police records gathered between 2003-2009 of different crimes in SF, starting from robbery and theft, up to loitering. 
+Each record contains description of the offence, time, location & neighbourhood and resolution. The full data structure is described in the following table:
 
 ![](/fig/data_set_into.jpg)
 
-As you can see from the table, some column data were changed for the analysis. I will briefly get into the major changes:
+During the preprocessing, some column data were changed in order to support the analysis. Briefly describing the major changes are:
 
-Category:
-One of the things that needed to change was the amount of categories, as you can see from this figure:
+**Category:**
+One of the things that needed to change was the amount of categories. Some categories are quite uncommon, as you can see from this figure:
 
 ![](/fig/CatOld.png)
 
-There are a lot of small categories that are very similar to one another, I merged some of them into new categories:
+Since there are a lot of small categories that are very similar to one another, the similar categories has been consolidated into new categories:
 
 ```R
 NON_CRIMINAL=c("NON-CRIMINAL","OTHER OFFENSES","RUNAWAY","RECOVERED VEHICLE","MISSING PERSON","SUICIDE","PORNOGRAPHY/OBSCENE MAT","SUSPICIOUS OCC","LOITERING")
@@ -40,15 +38,15 @@ NON_CRIMINAL=c("NON-CRIMINAL","OTHER OFFENSES","RUNAWAY","RECOVERED VEHICLE","MI
   s_data$Category=plyr::mapvalues(x =s_data$Category,from = c("KIDNAPPING","FAMILY OFFENSES") , to =  rep("FAMILY RELATED",2))
   s_data$Category=plyr::mapvalues(x =s_data$Category,from = c("BRIBERY","FRAUD","GAMBLING"), to = rep("WHITE COLLAR",3))
 ```
-In total, I merged 37 categories into 13:
+In total, 37 categories were merged into 13 distinctive ones:
 WHITE COLLAR, WARRANTS, THEFT, DRUG/NARCOTIC, ALCOHOL RELATED, SEX, NON-CRIMINAL, ROBBERY, ASSAULT, TRESPASS, VANDALISM, WEAPON LAWS, FAMILY RELATED.
 
-After changes were made the categories are now more robust and distinguished.
+This has resulted with a more robust and distinguished definition of crimes.
 ![](/fig/Cat.png)
 
-I would suggest SF police rethink the defined crime categories since categories containing few incidents are not easily modelled. 
+I would suggest SF police rethink the defined crime categories since categories containing few incidents are not easily modelled, and those crimes can be expressed in the subcategory variable. 
 
-PdDistrict:
+**PdDistrict:**
 There are 10 police stations in SF:
 ![](/fig/policeOnMap.png)
 some are more active then others:
@@ -56,14 +54,15 @@ some are more active then others:
 
 There are records without PdDistrict association. This is because they are "out of town" or "unknown", meaning they are located outside of SF. They will be discarded.
 
-Time: 
+**Time:**
 From looking at different crimes and their time of occurrence, it seems that most crimes are committed at around 6PM with lower rates at around 5AM. Taking a histogram of the data we can see that, as time is a continuous measure, plotting the entire 24-hour time frame beginning at 5AM, time of occurrence of crimes is approximately normally distributed around 6PM. Thus, I converted 0:5 to 24:29, as follows:
 
 ![](/fig/Time.png)
 
+The following heatmap represents the proportions of the crimes with respect to the time of the day:
 ![](fig/Cat-TimeFreq.png) 
-It is noticeable that there is a peak at both 12AM and 12PM with a very high correlation between the category count at both hours(0.98). This phenomena occurs during each month and year throughout the data. 
-I didn't find any bias that I could think of that would explain this phenomena. Apparently the peak is caused mainly by "White Collar" crimes but no explanatory feature could be found in the data. Two thoughts that come to mind are that either these times are the default times for the day and night shifts when the exact time is unknown, or that less urgent crimes such as "White Collar" are collectively reported at these hours. 
+For example, "White collar" crimes has a noticeable peak (expressed by strong red colour) both at 12AM and 12PM with a very high correlation between the category count during both hours(0.98). Although it is strange that white collar crimes are frequent at midnight, a close examination to locate the regions of the phenomena demonstrates that it is consistent in every month and a year throughout the data, without reasonable events causing bias. 
+There are two possible guesses to the phenomena origins - either these times are the default times for the day and night shifts when the exact time is unknown, or that less urgent crimes such as "White Collar" are collectively reported at these hours. At any case, this is likely to be one of the causes that the total number of crimes, per hour (previous graph), has peaks at 12AM and 12PM. 
 Because we don't understand it fully, we won't discard these records.
 
 #Basic functions
@@ -85,9 +84,9 @@ Another function is for geographical exploration. Here you can enter a desired c
 #filename = name of the figure file
 show_on_geo_net(map,s_data,cat_filter,div_desc=F,filename)
 ```
-Most figures here were created using these functions.
+Most of the figures in the analysis were created using these functions.
 
-#Results
+#Data Analysis
 **Based on numbers:**
 We will start with years and go up in resolution up to hours.
 Our first question is, whether there is a decline in crime over the years?
@@ -164,12 +163,15 @@ If we look at the proportion of crime categories per station:
 We see that most sex crimes are handled by Mission station, and this is also the case with drugs in Tenderloin station, although Mission and Southern  are also very active.
 Bayview and Ingleside deal more frequently with weapon laws and family issues then other stations.
 
-I tried to find out if I can predict for a random crime record the crime resolution. To do that I used bagging with classification trees,
-and got 88% accuracy. I didn't have time to fully investigate which feature is significant in determining the resolution. 
+In a optimal scenario, the police efforts and resources would be invested into solving crimes which will be resolved. Therefore the resolution variables was transferred into binary variable, where False indicate that the crime has not been resolved. 
+A bagging classification algorithm has learned the data, and got 88% accuracy over the test set. That number seemed suspiciously high, therefore a close study of the resolved proportions per crime category was done.
+![](fig/Cat-ResProp.png.png) 
+As it turns out, some of the categories are extremely likely to be resolved (such as warrants with 0.92 resolve rate), and some are not likely at all (such as theft with 0.06 resolve rate). This has led to a good classification algorithm. 
+
 
 **Based on geography**
-One thing that was interesting is whether crime geography can be inferred.
-I built a grid of points all across SF and associated each crime to the nearest geographical point of occurrence, for example:
+One thing that was interesting is whether spatial data can be useful to infer on the different crimes.
+I have built a grid of points all across SF and associated each crime to the nearest geographical point of occurrence, for example:
 
 ![](fig/SEX_SOLICITS.TO.VISIT.HOUSE.OF.PROSTITUTION.png)
 
@@ -180,7 +182,7 @@ As we can see, most crimes take place in the northern east of the city. This is 
 ![](fig/SF_residentsPerSquare.jpg)
 ![](fig/SF_rental_cost.jpg)
 
-I broke categories to three different descriptions to see if I get different geographical results:
+I broke categories to three different descriptions to see if I get different geographical results. 
 Cocaine distribution:
 ![](fig/drug_POSSESSION.OF.BASE.ROCK.COCAINE.FOR.SALE.png)
 Marijuana distribution:
@@ -198,20 +200,26 @@ Another interesting thing I came across is a positive correlation between the am
 I calculated this by the euclidean distance of each crime from the location of the relevant police station, and allotted them to bins of distances (~100M per bin).
 Although the correlations are positive, they are fairly weak and so cannot be used for inference.
 
+**K-nearest neighbours**
+An unsuccessful attempt was done to use nearest neighbours in order to predict the crime type based on the location. It was unsuccessful, because there are some locations, which literately has thousands of crimes exactly at the same GPS location. 
+This prevent a reasonable use of nearest neighbours - but also raises another question. In one point there were more than 12k crimes reported between 2006-2009, on a average of roughly 10 crimes per day. 
+It seems reasonable for the police to patrol those locations more than often than the usual. 
+
 **K-Means**
 To conclude my work I asked if there are crime clusters across geographic locations SF?
-To answer that I counted the number of crimes in each point and tried to cluster it using k-mean.
-Each point has a vector of all crimes that took place in it. After running the k-means twice:
+To answer that, I used the division of SF map into bins (~100M), and counted the number of crimes in each bin. The distribution of crimes at the been was considered a vector in R^13, and k-mean algorithm was used to cluster the bins.
+The motivation is that points with higher counts of crimes will be closer to each other (because of the structure of the L2 norm), while we also address the different distribution of crimes in each bin. 
+After running the k-means twice:
 Once for raw count:
 ![](fig/gCluster.png)
-Here we can see each cluster crime distribution:
+Here we can see each cluster crime distribution (each colour represent a different plot):
 ![](fig/gClusterBarPlot.png)
 And another for proportion of crime in the point :
 ![](fig/gClusterFreq.png)
 Here we can see each cluster crime distribution:
 ![](fig/gClusterBarPlotFreq.png)
 The results in general are very similar.
-We can clearly see that some crime types are more common in certain areas than others.
+We can clearly see that some crime types are more common in certain cluster groups than others.
 
 #Other directions
 1. Bayesian network
