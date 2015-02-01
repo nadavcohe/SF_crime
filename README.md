@@ -62,7 +62,7 @@ From looking at different crimes and when they took place I saw that in general 
 thus I shifted 0:5 to 24:29, this can also help us with different regressions later.
 ![](fig/Cat-TimeFreq.png)
 It is strange that there is a peak in both 12AM and 12PM with a very high correlation between the category count of them together(0.98),
-but I didn't find any bias that I could think of (looks like that over years and months) the peak is from the "white collar" but data looks fine and consistent.
+but I didn't find any bias that I could think of (looks like that over years and months) the peak is from the "white collar" but data looks fine and consistent. one though in mind is that this time is the default time then the exact time is unknown, and in less urgent tasks like "white collar" it happens more then other
 
 #Basic functions
 To make life easier and in the spirit of the company I created simple functions that enable you to create figures for this data set fast,
@@ -93,19 +93,19 @@ To answer this we first look of the crime count over the years
 it looks like there is a gentle decline with a big one from 2008 to 2009, by looking at the year with the different months:
 ![](fig/Month-Year.png)
 We can see that 2009 has missing months as July has no crimes and May also have a small number (2965 VS average of  8400)
-![](fig/Cat-YearFreq.png)
-
-![](fig/Cat-Year.png)
-
-The year 2009 is shot of a month (June)
-
-in average there is 8,482 crimes each month, thus in total 2009 will have ~ 101,784 crimes
-fitting the standard linear regression model for the number of crimes between 2003-2009 results with a significant trend of -1845 less crimes each year. The trend can be observed from the plot: 
+In average there is 8,482 crimes each month in 2009, thus we can add the missing month crimes to the total in 2009 and we will ~ 101,784 crimes, this is only an approximation and not including the probably missing data in may
+fitting the standard linear regression model for the number of crimes between 2003-2009 results with a significant trend of -2894 less crimes each year. The trend can be observed from the plot: 
 ![](fig/declineCrime.png)
 The model significance vs. the use of the average (= not fitting a model) results with a p-value of 0.0075
 That result should be taken with care though - standard regression model assumes the observations are independent samples from the same distribution, which is not the case here, as we have a time-series, where there is a dependency between the years.
 Conclusion:
-There is a decline in crime
+There is a decline in crime, but its not clear how strong it is.
+
+![](fig/Cat-YearFreq.png)
+
+![](fig/Cat-Year.png)
+
+
 
 ![](fig/Month.png)
 Association of crime and month?
