@@ -165,7 +165,7 @@ Bayview and Ingleside deal more frequently with weapon laws and family issues th
 
 In a optimal scenario, the police efforts and resources would be invested into solving crimes which will be resolved. Therefore the resolution variables was transferred into binary variable, where False indicate that the crime has not been resolved. 
 A bagging classification algorithm has learned the data, and got 88% accuracy over the test set. That number seemed suspiciously high, therefore a close study of the resolved proportions per crime category was done.
-![](fig/Cat-ResProp.png.png) 
+![](fig/Cat-ResProp.png) 
 As it turns out, some of the categories are extremely likely to be resolved (such as warrants with 0.92 resolve rate), and some are not likely at all (such as theft with 0.06 resolve rate). This has led to a good classification algorithm. 
 
 
