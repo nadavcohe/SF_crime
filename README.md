@@ -169,9 +169,9 @@ and got 88% accuracy, I didn't have time to investigate that feature help to ach
 
 **Based on geography**
 One thing that was interesting to me is what can I learn from the geographical of crime.
-I build a grid of points all across SF and associated each crime to the nearest point to him:
+I build a grid of points all across SF and associated each crime to the nearest point to him, fox example:
 
-![](fig/grid.png)
+![](fig/SEX_SOLICITS.TO.VISIT.HOUSE.OF.PROSTITUTION.png)
 
 Here are all the crimes on the grid:
 ![](fig/gridAllCrime.png)
