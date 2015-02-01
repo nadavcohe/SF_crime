@@ -107,15 +107,17 @@ This is the data with the adding of crime to 2009, the blue line is the regressi
 Next I wanted to know is there is a change over crime type over the years:
 
 ![](fig/Cat-Year.png)
-From this heat map, of the count of each crime in each year we can see that the general trend is kept each year with no significant change.
+From this heatmap of the count of each crime in each year we can see that the general trend is kept each year with no significant change.
 but lets look at the distribution of each crime over all years, maybe we can see trends there:
 ![](fig/Cat-YearFreq.png)
 here we can see that there is a general decline in crime in 2009 (we discussed is earlier what this is due to the missing month), also 
-there is a peak of warrants in 2003, but nothing much.
+there is a decline of warrants and "family related" over the years, but nothing much.
 looking on each distribution separately didn't revel much more :
 ![](fig/multiCat_Year.png)
+Conclusion:
+It looks like the decline is mainly due to  warrants and "family related" and not more "hard crime"
 
-Next:
+After covering year trends we move to months, here is the distribution of months:
 ![](fig/Month.png)
 Association of crime and month?
 
