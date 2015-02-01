@@ -183,9 +183,9 @@ as you can see, most crime takes place in the northern east of the city, this is
 I broke categories to there different descriptions to see if I get different geographical picture and I got nice results:
 here you can see cocaine distribution:
 ![](fig/drug_POSSESSION.OF.BASE.ROCK.COCAINE.FOR.SALE.png)
-and here marijuana
+And here marijuana:
 ![](fig/drug_POSSESSION.OF.MARIJUANA.png)
-you clearly see that cocaine use is in a specific location and this is opposite to marijuana that is more "all over the place"
+You clearly see that cocaine use is in a specific location and this is opposite to marijuana that is more "all over the place"
 another example is robbery:
 ![](fig/ROBBERY.png)
 While in general robbery is all across SF, you can see that some types of robberies are more common in specific locations
@@ -194,15 +194,23 @@ VS
 ![](fig/ROBBERY_BURGLARY.OF.RESIDENCE..FORCIBLE.ENTRY.png)
 
 Distance from police stations:
-another interesting thing I came across was a negative correlation between number of crimes that a station took care of and the distance, meaning that there might be a tendency for the station police man to work closer to the station.
+Another interesting thing I came across was a negative correlation between number of crimes that a station took care of and the distance, meaning that there might be a tendency for the station police man to work closer to the station.
 I calculated this be calculating the euclidean distance on each crime and the location of it's police station. and counted in number of crimes in each distance (~100M)
 cor:
 
 **K-Means**
-
-Is there similar crime clusters across SF?
+To conclude my work I asked Is there similar crime clusters across SF?
+you answer that I counted the number of crimes in each point and tried to cluster it using k-mean
+each point have a vector of all crimes that took place inside, and run the k-means twice:
+once of raw count:
 ![](fig/gCluster.png)
+here you can see each cluster crime distribution:
 ![](fig/gClusterBarPlot.png)
+and another of frequency in the point :
+![](fig/gClusterFreq.png)
+here you can see each cluster crime distribution:
+![](fig/gClusterBarPlotFreq.png)
+The results in general are very similar.
 
 #Things that didn't work
 1. KNN
