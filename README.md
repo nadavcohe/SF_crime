@@ -107,7 +107,7 @@ show_on_geo_net(map,s_data,cat_filter,div_desc=F,filename)
 
 **K-Means**
 ![](fig/gCluster.png)
-![]((fig/gClusterBarPlot.png)
+![](fig/gClusterBarPlot.png)
 
 #Things that didn't work
 1. KNN
@@ -115,5 +115,5 @@ show_on_geo_net(map,s_data,cat_filter,div_desc=F,filename)
 
 #Other directions
 1. Bayesian network
-2. finding more biases in the data
-3. crossing with other DB (airbnb, poverty, health, temperature, court)
+2. Finding more biases in the data
+3. Crossing with other DB (airbnb, poverty, health, temperature, court)
