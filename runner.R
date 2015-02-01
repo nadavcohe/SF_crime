@@ -7,13 +7,15 @@ if (!exists("map")){
   map <- get_map(location = 'San Francisco', zoom = 12)
 }
 
-# message("Welcome to analisys program for crime in SF")
-# message("function list:\n
-#         data_load_prep - loading to csv file and pre-process\n
-#         create_all_figs - generates interesting accroding to things i saw\n
-#         generate_fig - generates figure according to diffrent paramaters from user\n
-#         load(\"s_data\")
-#         ....")
+message("Welcome to analisys program for crime in SF")
+message("function list:\n
+        data_load_prep - loading to csv file and pre-process\n
+        create_all_figs - generates interesting figures accroding to things i saw\n
+        generate_fig - generates figure according to diffrent paramaters from user\n
+        show_on_geo_net - generates map figure with amount of diffrent catergories\n
+        kmeans_on_map - runs kmeans on all points on map
+        load(\"s_data\")
+        ....")
 
 
 #This function will load and pre-process the csv file
@@ -59,16 +61,18 @@ data_load_prep <- function(){
   #change names of X,Y to Longitude,Latitude
   names(s_data)[names(s_data)=="X"] <- "Longitude";
   names(s_data)[names(s_data)=="Y"] <- "Latitude";
-  s_data$PdDistrict=plyr::mapvalues(x =s_data$PdDistrict,from = c(""), to = "UNREPORTED")
+  s_data=s_data[!(s_data$PdDistrict==""),];
+  s_data$PdDistrict=factor(s_data$PdDistrict);
+  # s_data$PdDistrict=plyr::mapvalues(x =s_data$PdDistrict,from = c(""), to = "UNREPORTED")
   save(s_data,file="s_data");
   return(s_data);
 }
 attr(data_load_prep, "help") <-"this function will load and pre-process this csv file"
 
 #col_filter =  columns to be selected (like "Category" or c("Category","Time"))
-#scale_change = (0 = no change);(1 = log space) (2 = Frequency)
+#scale_change = (0 = no change);(1 = log space) (2 = Proportion)
 #clust_dim_two = if you selected two columns do you want to cluster the second one?
-#sortPlot = if you selecte only one column do you want the data to be sorted?
+#sortPlot = if you selected only one column do you want the data to be sorted?
 #filename = name of the figure file
 generate_fig <- function(s_data,col_filter,scale_change=0,clust_dim_two=T,sortPlot=F,file_name=NULL){
   if (length(col_filter)>2 || length(col_filter)==0){
@@ -82,9 +86,7 @@ generate_fig <- function(s_data,col_filter,scale_change=0,clust_dim_two=T,sortPl
   if (is.null(fig_data)){
     return (NULL);
   }
-
   #end of input error handeling
-  
   # chiStatus=c("Category are Associated(non Uniform)","Category are not Associated(Uniform)")
   chiStatus="";
   # pValue=chisq.test(fig_data)$p.value;
@@ -97,19 +99,19 @@ generate_fig <- function(s_data,col_filter,scale_change=0,clust_dim_two=T,sortPl
     ylab=paste(ylab,"(in log space)")
   }else if ((scale_change)==2){
     fig_data=prop.table(fig_data,1);
-    figTitle = paste(figTitle,"Freq of",col_filter[1]);
+    figTitle = paste(figTitle,"Proportion of",col_filter[1]);
   }
   
-  
+  #checking if it's one dim or two (barplot or hist)
   if (length(fig_data)==dim(fig_data)[1]){
     fig_data=as.data.frame(fig_data,stringsAsFactors=T);
     if (sortPlot) {
       fig_data=arrange(fig_data,Freq)
       fig_data$Var1=factor(fig_data$Var1, levels = fig_data$Var1[order(fig_data$Freq)])
     };
-    ggplot(fig_data, aes(Var1, Freq,fill=Freq)) + geom_bar(stat="identity", position="dodge") + 
+    ggplot(fig_data, aes(Var1, Freq,fill=Freq,group = 1)) + geom_bar(stat="identity", position="dodge") + 
       xlab(col_filter) + ggtitle(figTitle) + scale_fill_gradient(low="green",high="red") +
-      geom_hline(aes(yintercept=median(Freq),color="blue")) + 
+      geom_hline(aes(yintercept=median(Freq),color="blue")) + #geom_smooth(method=lm,se=FALSE,fullrange=T) + 
       theme(plot.title = element_text(lineheight=.8, face="bold"),axis.text.x = element_text(angle = 45, hjust = 1,face="bold",colour="black"),axis.text.y = element_text(face="bold",colour="black")) + 
       ggsave(paste0(file_name,".png"),width = 12,height = 8);
   }else{
@@ -123,14 +125,14 @@ generate_fig <- function(s_data,col_filter,scale_change=0,clust_dim_two=T,sortPl
       dendrogram="row";
       Colv=F;
     }
-    heatmap.2(fig_data,trace = "none",col=myColor,dendrogram = dendrogram ,Colv = Colv,xlab=col_filter[2],margins = c(4, 8),main=paste("HeatMap",figTitle,sep="\n"),srtCol=25)
+    heatmap.2(fig_data,trace = "none",col=myColor,dendrogram = dendrogram ,Colv = Colv,xlab=col_filter[2],ylab=col_filter[1],margins = c(4, 8),main=paste("HeatMap",figTitle,sep="\n"),srtCol=25)
     if (!is.null(file_name)){
       dev.off();
     }
   }
-
 }
 
+#This function generates all figures that are in the readme file
 create_all_figs <-function(s_data){
   dir.create("fig",showWarnings = F);
   generate_fig(s_data,c("Time"),scale_change = 0,clust_dim_two=F,file_name = "fig/Time")
@@ -162,65 +164,75 @@ create_all_figs <-function(s_data){
   png("fig/multiCat_Time.png",800,600)
   par(mfrow=c(4,4))
   for (i in (1:dim(cat_time)[1])){
-    barplot(cat_time[i,],main=rownames(cat_time)[i])
+    barplot(cat_time[i,],main=rownames(cat_time)[i],xlab="hour")
   }
   dev.off()
+  
+  cat_time=prop.table(table(s_data$Category,s_data$Year),1);
+  png("fig/multiCat_Year.png",800,600)
+  par(mfrow=c(4,4))
+  for (i in (1:dim(cat_time)[1])){
+    barplot(cat_time[i,],main=rownames(cat_time)[i],xlab="year")
+  }
+  dev.off()
+  
+  cat_time=prop.table(table(s_data$Category,s_data$Month),1);
+  png("fig/multiCat_Month.png",800,600)
+  par(mfrow=c(4,4))
+  for (i in (1:dim(cat_time)[1])){
+    barplot(cat_time[i,],main=rownames(cat_time)[i],xlab="month")
+  }
+  dev.off()
+  
+  kmeans_on_map(map,s_data,F,"kmeanRaw");
+  kmeans_on_map(map,s_data,T,"kmeanProp");
+  show_on_geo_net(map,s_data,"THEFT",T,"fig/theft");
 }
 
-analisys <- function(s_data){
+holidays_analisys <- function(s_data){
   #Holidays
   ##########
-  #holidays VS non-holidays
-  #Christmas in preticular?
-  #check is there is a change in the holidays chi-squer?
   hlist <- c("USChristmasDay","USGoodFriday","USIndependenceDay","USLaborDay","USNewYearsDay","USThanksgivingDay")
   myholidays  <- dates(as.character(holiday(2003:2009,hlist)),format="Y-M-D")
   onHoliday=table(s_data$Category,is.holiday(s_data$Date,myholidays))
   heatmap.2(round(t(t(onHoliday)/colSums(onHoliday)),3));
   chisq.test(cbind(as.numeric(onHoliday[, 1]) ,as.numeric(onHoliday[, 2]) ),simulate.p.value = 200);
-  
-  #connection between Category and PdDistrict
-  ###########################################
-
-  #Mechine Learning? try to pridict crime
-  #######################################
-  #there is a dicrese in crime
-
-
-  #Extra
-  #######
-  #glm
-  #lda
-  #qda
 }
 
-geograpical <- function(s_data){
-  #geograpical
-  ############
-  #viecle theft in the reach ariar?
+#this function will get all all crimes and assin each to a point in the map, next it will cluster them using k-means
+#prop = is you want to count of each crime to be the raw count or the proportion in the point
+kmeans_on_map <- function(map,s_data,prop=F,filename=""){
   s_data=s_data[s_data$Longitude!=0,];
-  allCluster=NULL
-  # for (i in 3:9){  Year==paste0("0",i)
-  for (i in levels(s_data$Category)){
-    temp=subset(s_data,subset = (Category==i),select = c("Longitude","Latitude"))
-    kme=kmeans(temp,centers = 10);
-    allCluster=rbind(cbind(i,kme$centers),allCluster)
+  xmin = min(s_data$Longitude)
+  xmax = max(s_data$Longitude)
+  ymin = min(s_data$Latitude)
+  ymax = max((s_data$Latitude))
+  xtable=seq(xmin,xmax+10^-2,10^-2)
+  ytable=seq(ymin,ymax+10^-2.5,10^-2.5)
+  multiBox=cbind(.bincode(s_data$Longitude,xtable,include.lowest = T),.bincode(s_data$Latitude,ytable,include.lowest = T))
+  s_data$Cell=paste(multiBox[,1],multiBox[,2],sep=",")
+  if (prop){
+    tableForKM=prop.table(table(s_data$Cell,s_data$Category),1)
+  }else{
+    tableForKM=(table(s_data$Cell,s_data$Category))
   }
-  ggmap(map) + geom_point(aes(x = as.numeric(allCluster[,2]), y = as.numeric(allCluster[,3]), size = 3,colour=allCluster[,1]), alpha = .9)
-  
-  s_data$clusterG=kme$cluster;
-  map <- get_map(location = 'San Francisco', zoom = 12)
-  mapPoints <- ggmap(map) + geom_point(aes(x = Longitude, y = Latitude, size = 3,colour=Category), data = s_data[1:1000,], alpha = .5)
-  mapPoints <- ggmap(map) + geom_rect(aes(xmin = min(s_data$Longitude),xmax=max(s_data$Longitude) , ymin = min(s_data$Latitude),ymax=max((s_data$Latitude)), size = 3), alpha = .5)
-  #Dangers neighborhood total and over time
-  #connection between time and location 
-  ggmap(map) + geom_point(aes(x = as.numeric(allCluster[,2]), y = as.numeric(allCluster[,3]), size = 3,colour=allCluster[,1]), alpha = .9)
+  tableKM=kmeans(tableForKM,centers = 6)$cluster
+  tableKM=cbind(t(matrix(as.numeric(unlist(strsplit(names(tableKM),","))),nrow = 2,ncol = length(tableKM))),cluster=as.numeric(tableKM))
+  tableKM=data.frame(x=xtable[tableKM[,1]],y=ytable[tableKM[,2]],class=tableKM[,3])
+  ggmap(map) + geom_point(data=tableKM,aes(x = x, y = y, colour=factor(class),size=20), alpha = .9) +
+    ggtitle("kmeans freq in cell") + scale_colour_brewer(palette="Set1") + ggsave(file=paste0(filename,".png"),width = 7,height = 7)
+  png(filename =paste0(filename,"BarPlot",".png"),1000,1000 )
+  par(mfrow=c(2,3))
+  for (i in 1:6){
+    barplot(colMeans(tableForKM[which(tableKM$class==i),]),main=paste0("g-",i),las=2,ylim=c(0,1))
+  }
+  dev.off()
 }
 
 #show_on_geo_net
 #map = map object of SF (loaded each time your source the R file)
-#cat_filter = Category to be selected (like "THEFT")
-#div_desc = if you want seperate figure for each Description (like T)
+#cat_filter = category to be selected (like "THEFT")
+#div_desc = if you want separate figures for each description (like T)
 #filename = name of the figure file
 show_on_geo_net <- function (map,s_data,cat_filter,div_desc=F,filename){
   get_map <- function(multiBox,filename,div_desc=F){
@@ -248,22 +260,7 @@ show_on_geo_net <- function (map,s_data,cat_filter,div_desc=F,filename){
   s_data=subset(s_data,Category==cat_filter)
   multiBox=cbind(.bincode(s_data$Longitude,xtable,include.lowest = T),.bincode(s_data$Latitude,ytable,include.lowest = T))
   s_data$Cell=paste(multiBox[,1],multiBox[,2],sep=",")
-  tableForKM=prop.table(table(s_data$Cell,s_data$Category),1)
-  # tableForKM=(table(s_data$Cell,s_data$Category))
-  tableKM=kmeans(tableForKM,centers = 6)$cluster
-  tableKM=cbind(t(matrix(as.numeric(unlist(strsplit(names(tableKM),","))),nrow = 2,ncol = length(tableKM))),cluster=as.numeric(tableKM))
-  tableKM=data.frame(x=xtable[tableKM[,1]],y=ytable[tableKM[,2]],class=tableKM[,3])
-  ggmap(map) + geom_point(data=tableKM,aes(x = x, y = y, colour=factor(class),size=20), alpha = .9) +
-    ggtitle("kmeans freq in cell") + scale_colour_brewer(palette="Set1") + ggsave(file=paste0("fig/gClusterFreq",".png"),width = 7,height = 7)
-  png(filename =paste0("fig/gClusterBarPlotFreq",".png"),1000,1000 )
-  par(mfrow=c(2,3))
-  for (i in 1:6){
-    barplot(colMeans(tableForKM[which(tableKM$class==i),]),main=paste0("g-",i),las=2,ylim=c(0,1))
-  }
-  dev.off()
-  
-  
-  # browser();
+    # browser();
   multiBox=as.data.frame(multiBox);
   multiBox=cbind(multiBox,Descript=s_data$Descript)
   if (div_desc){
@@ -274,25 +271,20 @@ show_on_geo_net <- function (map,s_data,cat_filter,div_desc=F,filename){
   }else{
     get_map(multiBox,filename)
   }
-
-  # allBoxX=data.frame(x=rep(xtable,2),y=c(ymin,ymax));
-  # allBoxY=data.frame(x=c(xmin,xmax),y=rep(ytable));
-  # ggmap(map) + geom_line(data=allBoxX, inherit.aes=FALSE, aes(x = x,y =y, size = 3) ,alpha = .5) + 
-    # geom_line(data=allBoxY, inherit.aes=FALSE, aes(x = x,y =y, size = 3) ,alpha = .5) 
-  # image((1+table(multiBox[s_data$Category=="ARSON",1],multiBox[s_data$Category=="ARSON",2])))
 }
+
+#calculating the euclidean distance from a vector x
 eudli_dist <- function(x){
   return(sqrt((x[1]-x[4])^2+(x[2]-x[3])^2))
 }
 
+#getting a vector and returning the count of element according to the diffrent breaks
 hist_dist <- function(x,breaks){
   hist(x,breaks =breaks,plot=F)$count
 }
 
+#mesuring the distance of crimes from their stations
 radios_police <- function(s_data,cat_filter){
-  # options(digits=12)
-  # knn on all points deside how many points 
-  #not cool enogh
   police=read.csv("PoliceStations.csv");
   police=as.data.frame(police)
   police$PdDistrict=factor(police$PdDistrict,levels = levels(s_data$PdDistrict))
@@ -300,7 +292,7 @@ radios_police <- function(s_data,cat_filter){
   police$Longitude=(format(police$Longitude,nsmall=12))
   police$Latitude=as.numeric(police$Latitude);
   police$Longitude=as.numeric(police$Longitude);
-  ggmap(map) + geom_point(data=police,aes(x = Longitude, y =Latitude ,colour=PdDistrict,size=16)) + ggsave(file="fig/policeOnMap.png",width = 7,height = 7)
+  # ggmap(map) + geom_point(data=police,aes(x = Longitude, y =Latitude ,colour=PdDistrict,size=16)) + ggsave(file="fig/policeOnMap.png",width = 7,height = 7)
   s_data=subset(s_data,Category==cat_filter)
   s_data=s_data[!(s_data$PdDistrict==""),]
   s_data=s_data[!(s_data$Longitude==0),]
@@ -316,6 +308,28 @@ radios_police <- function(s_data,cat_filter){
   # heatmap.2(prop.table(geoList,1),trace = "none",Colv = F,dendrogram = "row",col=myColor)
   return(apply(geoList,1,cor,y=41:1,method = "spearman"))
   # options(digits=5)
+}
+
+geograpical <- function(s_data){
+  #geograpical
+  ############
+  #viecle theft in the reach ariar?
+  s_data=s_data[s_data$Longitude!=0,];
+  allCluster=NULL
+  for (i in levels(s_data$Category)){
+    temp=subset(s_data,subset = (Category==i),select = c("Longitude","Latitude"))
+    kme=kmeans(temp,centers = 10);
+    allCluster=rbind(cbind(i,kme$centers),allCluster)
+  }
+  ggmap(map) + geom_point(aes(x = as.numeric(allCluster[,2]), y = as.numeric(allCluster[,3]), size = 3,colour=allCluster[,1]), alpha = .9)
+  
+  s_data$clusterG=kme$cluster;
+  map <- get_map(location = 'San Francisco', zoom = 12)
+  mapPoints <- ggmap(map) + geom_point(aes(x = Longitude, y = Latitude, size = 3,colour=Category), data = s_data[1:1000,], alpha = .5)
+  mapPoints <- ggmap(map) + geom_rect(aes(xmin = min(s_data$Longitude),xmax=max(s_data$Longitude) , ymin = min(s_data$Latitude),ymax=max((s_data$Latitude)), size = 3), alpha = .5)
+  #Dangers neighborhood total and over time
+  #connection between time and location 
+  ggmap(map) + geom_point(aes(x = as.numeric(allCluster[,2]), y = as.numeric(allCluster[,3]), size = 3,colour=allCluster[,1]), alpha = .9)
 }
 
 dub_menage <- function(){
@@ -382,4 +396,47 @@ log_reg <- function(s_data){
   fit <- apply(log1$fitted,1,get_max)
   predictions <- colnames(log1$fitted)[fit]
   sum(Category == predictions)/dim(s_data)[1]
+}
+
+resolution_learn <- function(s_data){
+  attach(s_data)
+  #Prepare data
+  notSolved <- (Resolution == "NONE")|(Resolution == "NOT PROSECUTED")|(Resolution == "UNFOUNDED")
+  d<- data.frame(factor(notSolved),s_data[,c(3,4,7)],factor(s_data[,6]),factor(s_data[,12]),factor(s_data[,13]))
+  names(d)[1] <- "Resolu"
+  n = dim(d)[1]
+  
+  #Train/Test
+  set.seed(0)
+  train_ind <- sample(1:n,50000,replace=F)
+  test_ind <- sample(which(!(1:n %in% train_ind)==T),10000,replace=F)
+  tr <- d[train_ind,]
+  tst <- d[test_ind,]
+  
+  #Do bagging
+  library(adabag)
+  bag1<-bagging(Resolu~Category+DayOfWeek+Descript+Location+PdDistrict+Time,data=d)
+  predBag <- predict(bag1,newdata=subset(tst,select=(c("Category","DayOfWeek","Descript","Location","PdDistrict","Time"))))
+  return(sum(predBag==tst[,1])/dim(tst)[1])
+  #Research crimes proportions
+  calc_efficiency <- function(crime,d){
+    return(table(d[d[,2]==crime,1])[2]/sum(table(d[d[,2]==crime,1])))
+  }
+  eff<-sapply(names(which(table(d[,2])>100)),calc_efficiency,d)
+  eff_most_popular<-sapply(names(which(table(d[,2])>10000)),calc_efficiency,d)
+  browser();
+}
+
+check_white <- function(s_data){
+  white=subset(s_data,Category=="WHITE COLLAR")
+  white$Time=as.numeric(white$Time)
+  white$Time[!(white$Time==24 | white$Time==12)]=0
+  white$Time[(white$Time==24 | white$Time==12)]=1
+  selected=sample(1:dim(white)[1],10000);
+  sampl=white[selected,]
+  nsampl=white[-selected,]
+  lm1=lm(Time ~ DayOfWeek + Descript + Location + PdDistrict,data=sampl)
+  res=predict(lm1,newdata=subset(nsampl,select = c("Time","DayOfWeek","Descript","Location","PdDistrict")))
+  print(sqrt(avg((res-nsampl$Time)^2)))
+  return(check);
 }
