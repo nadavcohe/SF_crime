@@ -136,9 +136,9 @@ There is no clear cut trend in the count of crimes over the different days
 as we already come to understand, the majority of the crimes are theft and non-criminal and this is true on all days
 ![](fig/Cat-DaysFreq.png)
 here we are looking on the frequency on each crime over all days, and we can interesting things, it looks like we have 3 crime clusters:
-1. this group (Weapon laws until white collar) are less chance to happen over the weekend.
-2. this group (theft until alcohol related) is the opposite of the first group, with an increase over the weekend
-3. sex is an outlier with a strong rise from Tue though Thur and low chance in other days
+	* this group (Weapon laws until white collar) are less chance to happen over the weekend.
+	* this group (theft until alcohol related) is the opposite of the first group, with an increase over the weekend
+	* sex is an outlier with a strong rise from Tue though Thur and low chance in other days
 this is very cool and it makes sense except the sex crimes...
 Conclusion:
 The police should know what crimes to expect each day and build its force accordantly. 
@@ -150,8 +150,8 @@ Is there an association of crime and time in the day?
 Here is the different categories and there different hour distributions:
 ![](fig/multiCat_Time.png)
 as we can see, most crimes take place from noom till the early night, crimes that are different are:
-1. sex and vandalism are more from after noon till night
-2. non-criminal, white collar and trespass take place in early morning till after noon
+	* sex and vandalism are more from after noon till night
+	* non-criminal, white collar and trespass take place in early morning till after noon
 
 **Based on geography**
 ![](fig/ROBBERY.png)
