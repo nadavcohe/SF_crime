@@ -332,6 +332,8 @@ geograpical <- function(s_data){
   ggmap(map) + geom_point(aes(x = as.numeric(allCluster[,2]), y = as.numeric(allCluster[,3]), size = 3,colour=allCluster[,1]), alpha = .9)
 }
 
+
+### things that didnt work:
 dub_menage <- function(){
   #dont remove dup, and see crime solving in diffrent places , not working
   #Compare time of happened and solved
@@ -418,13 +420,13 @@ resolution_learn <- function(s_data){
   bag1<-bagging(Resolu~Category+DayOfWeek+Descript+Location+PdDistrict+Time,data=d)
   predBag <- predict(bag1,newdata=subset(tst,select=(c("Category","DayOfWeek","Descript","Location","PdDistrict","Time"))))
   return(sum(predBag==tst[,1])/dim(tst)[1])
-  #Research crimes proportions
-  calc_efficiency <- function(crime,d){
-    return(table(d[d[,2]==crime,1])[2]/sum(table(d[d[,2]==crime,1])))
-  }
-  eff<-sapply(names(which(table(d[,2])>100)),calc_efficiency,d)
-  eff_most_popular<-sapply(names(which(table(d[,2])>10000)),calc_efficiency,d)
-  browser();
+#   #Research crimes proportions
+#   calc_efficiency <- function(crime,d){
+#     return(table(d[d[,2]==crime,1])[2]/sum(table(d[d[,2]==crime,1])))
+#   }
+#   eff<-sapply(names(which(table(d[,2])>100)),calc_efficiency,d)
+#   eff_most_popular<-sapply(names(which(table(d[,2])>10000)),calc_efficiency,d)
+#   browser();
 }
 
 check_white <- function(s_data){
