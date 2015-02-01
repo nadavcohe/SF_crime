@@ -174,8 +174,8 @@ I build a grid of points all across SF and associated each crime to the nearest 
 his is all the crimes on the grid:
 ![](fig/gridAllCrime.png)
 are you can see, most crime takes place in the northern east of the city, this is known to be the more active side of the city:
-[http://web.fg.tp.edu.tw/~earth/vision/study/study06/HK/media/GoogleEarth/San%20Francisco%20project/images/Untitled-1.jpg](http://web.fg.tp.edu.tw/~earth/vision/study/study06/HK/media/GoogleEarth/San%20Francisco%20project/images/Untitled-1.jpg)
-[http://static.businessinsider.com/image/53ee18ae69bedd0115d39543/image.jpg](http://static.businessinsider.com/image/53ee18ae69bedd0115d39543/image.jpg)
+![](fig/SF_residentsPerSquare.jpg)
+![](fig/SF_rental_cost.jpg)
 
 ![](fig/ROBBERY.png)
 Is there a different geographical distribution for different crimes in the same  Category?
