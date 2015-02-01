@@ -14,12 +14,12 @@
 
 #Introduction to data set
 
-The data set have 976,731 records,
+The data set has 976,731 records,
 For each record we have the following columns:
 
 ![](/fig/data_set_into.jpg)
 
-As you can see in the table, some columns data was changed for the analysis, I will briefly get into the major changes:
+As you can see from the table, some columns data was changed for the analysis, I will briefly get into the major changes:
 
 Category:
 One of the things that needed to change was the amount of categories in the data, as you can see from this figure:
@@ -40,11 +40,13 @@ NON_CRIMINAL=c("NON-CRIMINAL","OTHER OFFENSES","RUNAWAY","RECOVERED VEHICLE","MI
   s_data$Category=plyr::mapvalues(x =s_data$Category,from = c("KIDNAPPING","FAMILY OFFENSES") , to =  rep("FAMILY RELATED",2))
   s_data$Category=plyr::mapvalues(x =s_data$Category,from = c("BRIBERY","FRAUD","GAMBLING"), to = rep("WHITE COLLAR",3))
 ```
-In total I merged 37 categories into 13
+In total I merged 37 categories into 13:
 WHITE COLLAR, WARRANTS, THEFT, DRUG/NARCOTIC, ALCOHOL RELATED, SEX, NON-CRIMINAL, ROBBERY, ASSAULT, TRESPASS, VANDALISM, WEAPON LAWS, FAMILY RELATED.
 
 After the change the categories are now more robust and distinguished.
 ![](/fig/Cat.png)
+
+I would suggest SF police to rethink there categories because small categories can have a tendency to disappear and it would be better to have categories and sub-categories.
 
 PdDistrict:
 There are 10 police stations in SF:
@@ -52,14 +54,15 @@ There are 10 police stations in SF:
 some are more active then others:
 ![](/fig/PdDistrict.png)
 
+There are crimes that do not have PdDistrict, this is because they are "out of town" or "unknown" we will discard them
 
-Time: From looking are different crimes and when they took place I saw that in general the "crime day" ends at around 5AM and then start again, as you can see from the figure:
+Time: 
+From looking at different crimes and when they took place I saw that in general the "crime day" ends at around 5AM and then start again, as you can see from the figure:
 ![](/fig/Time.png)
-
+thus I shifted 0:5 to 24:29, also this can help as with different regressions.
+![](fig/Cat-TimeFreq.png)
 It is strange that there is a peak in both 12AM and 12PM with a very high correlation between the category count of them together(0.98),
 but I didn't find any bias that I could think of (looks like that over years and months) the peak is from the "white collar" but data looks fine and consistent.
-
-![](fig/Cat-TimeFreq.png)
 
 #Basic functions
 To make life easier and in the spirit of the company I created simple functions that enable you to create figures for this data set fast,
