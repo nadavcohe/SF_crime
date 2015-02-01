@@ -99,7 +99,8 @@ fitting the standard linear regression model for the number of crimes between 20
 The model significance vs. the use of the average (= not fitting a model) results with a p-value of 0.0075
 That result should be taken with care though - standard regression model assumes the observations are independent samples from the same distribution, which is not the case here, as we have a time-series, where there is a dependency between the years.
 Conclusion:
-There is a decline in crime, but its not clear how strong it is.
+There is a decline in crime, but its not clear how strong it is, in next steps we will try to find the cause.
+
 
 ![](fig/Cat-YearFreq.png)
 
