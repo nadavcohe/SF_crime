@@ -14,7 +14,7 @@ message("function list:\n
         generate_fig - generates figure according to diffrent paramaters from user\n
         show_on_geo_net - generates map figure with amount of diffrent catergories\n
         kmeans_on_map - runs kmeans on all points on map\n
-        load(\"s_data\")\n
+        for start to can load first the data : load(\"s_data\")\n
         ")
 
 
@@ -195,16 +195,6 @@ create_all_figs <-function(s_data){
 
 }
 
-holidays_analisys <- function(s_data){
-  #Holidays
-  ##########
-  hlist <- c("USChristmasDay","USGoodFriday","USIndependenceDay","USLaborDay","USNewYearsDay","USThanksgivingDay")
-  myholidays  <- dates(as.character(holiday(2003:2009,hlist)),format="Y-M-D")
-  onHoliday=table(s_data$Category,is.holiday(s_data$Date,myholidays))
-  heatmap.2(round(t(t(onHoliday)/colSums(onHoliday)),3));
-  chisq.test(cbind(as.numeric(onHoliday[, 1]) ,as.numeric(onHoliday[, 2]) ),simulate.p.value = 200);
-}
-
 #this function will get all all crimes and assin each to a point in the map, next it will cluster them using k-means
 #prop = is you want to count of each crime to be the raw count or the proportion in the point
 kmeans_on_map <- function(map,s_data,prop=F,filename=""){
@@ -213,6 +203,7 @@ kmeans_on_map <- function(map,s_data,prop=F,filename=""){
   xmax = max(s_data$Longitude)
   ymin = min(s_data$Latitude)
   ymax = max((s_data$Latitude))
+  #table of all points or refrence in the grid of SF
   xtable=seq(xmin,xmax+10^-2,10^-2)
   ytable=seq(ymin,ymax+10^-2.5,10^-2.5)
   multiBox=cbind(.bincode(s_data$Longitude,xtable,include.lowest = T),.bincode(s_data$Latitude,ytable,include.lowest = T))
@@ -308,18 +299,16 @@ radios_police <- function(s_data,cat_filter){
   ret_dist=apply(tempData[,-1],1,eudli_dist)
   tempData$ret_dist=ret_dist;
   breaks=c(seq(0,0.04,10^-3),0.2);
-  # browser();
+  #counting the crimes in each distance
   geoList=tapply(tempData$ret_dist,tempData$PdDistrict,FUN = hist_dist,breaks=breaks );
   geoList=matrix(unlist(geoList),10,length(breaks)-1,dimnames = list(names(geoList),breaks[-1]))
-  # heatmap.2(prop.table(geoList,1),trace = "none",Colv = F,dendrogram = "row",col=myColor)
+  #calculating the cor
   return(apply(geoList,1,cor,y=41:1,method = "spearman"))
-  # options(digits=5)
 }
 
 geograpical <- function(s_data){
   #geograpical
   ############
-  #viecle theft in the reach ariar?
   s_data=s_data[s_data$Longitude!=0,];
   allCluster=NULL
   for (i in levels(s_data$Category)){
@@ -338,6 +327,15 @@ geograpical <- function(s_data){
   ggmap(map) + geom_point(aes(x = as.numeric(allCluster[,2]), y = as.numeric(allCluster[,3]), size = 3,colour=allCluster[,1]), alpha = .9)
 }
 
+holidays_analisys <- function(s_data){
+  #Holidays
+  ##########
+  hlist <- c("USChristmasDay","USGoodFriday","USIndependenceDay","USLaborDay","USNewYearsDay","USThanksgivingDay")
+  myholidays  <- dates(as.character(holiday(2003:2009,hlist)),format="Y-M-D")
+  onHoliday=table(s_data$Category,is.holiday(s_data$Date,myholidays))
+  heatmap.2(round(t(t(onHoliday)/colSums(onHoliday)),3));
+  chisq.test(cbind(as.numeric(onHoliday[, 1]) ,as.numeric(onHoliday[, 2]) ),simulate.p.value = 200);
+}
 
 ### things that didnt work:
 dub_menage <- function(){

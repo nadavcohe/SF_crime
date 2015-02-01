@@ -170,6 +170,7 @@ As it turns out, some of the categories are extremely likely to be resolved (suc
 
 
 **Based on geography**
+
 One thing that was interesting is whether spatial data can be useful to infer on the different crimes.
 I have built a grid of points all across SF and associated each crime to the nearest geographical point of occurrence, for example:
 
@@ -195,7 +196,7 @@ While in general robbery occurs all across SF, we can see that some types of rob
 VS
 ![](fig/ROBBERY_BURGLARY.OF.RESIDENCE..FORCIBLE.ENTRY.png)
 
-Distance from police stations:
+**Distance from police stations:**
 Another interesting thing I came across is a positive correlation between the amount of crimes that a station handled and the distance, meaning that there might be a tendency for the station police officers to work closer to the station.
 I calculated this by the euclidean distance of each crime from the location of the relevant police station, and allotted them to bins of distances (~100M per bin).
 Although the correlations are positive, they are fairly weak and so cannot be used for inference.
