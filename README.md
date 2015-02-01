@@ -170,19 +170,33 @@ and got 88% accuracy, I didn't have time to investigate that feature help to ach
 **Based on geography**
 One thing that was interesting to me is what can I learn from the geographical of crime.
 I build a grid of points all across SF and associated each crime to the nearest point to him:
+
 ![](fig/grid.png)
-his is all the crimes on the grid:
+
+Here are all the crimes on the grid:
 ![](fig/gridAllCrime.png)
-are you can see, most crime takes place in the northern east of the city, this is known to be the more active side of the city:
+
+as you can see, most crime takes place in the northern east of the city, this is known to be the more active side of the city:
 ![](fig/SF_residentsPerSquare.jpg)
 ![](fig/SF_rental_cost.jpg)
 
-![](fig/ROBBERY.png)
-Is there a different geographical distribution for different crimes in the same  Category?
+I broke categories to there different descriptions to see if I get different geographical picture and I got nice results:
+here you can see cocaine distribution:
 ![](fig/drug_POSSESSION.OF.BASE.ROCK.COCAINE.FOR.SALE.png)
+and here marijuana
 ![](fig/drug_POSSESSION.OF.MARIJUANA.png)
+you clearly see that cocaine use is in a specific location and this is opposite to marijuana that is more "all over the place"
+another example is robbery:
+![](fig/ROBBERY.png)
+While in general robbery is all across SF, you can see that some types of robberies are more common in specific locations
+![](fig/ROBBERY_BURGLARY.OF.APARTMENT.HOUSE..UNLAWFUL.ENTRY.png)
+VS
+![](fig/ROBBERY_BURGLARY.OF.RESIDENCE..FORCIBLE.ENTRY.png)
 
 Distance from police stations:
+another interesting thing I came across was a negative correlation between number of crimes that a station took care of and the distance, meaning that there might be a tendency for the station police man to work closer to the station.
+I calculated this be calculating the euclidean distance on each crime and the location of it's police station. and counted in number of crimes in each distance (~100M)
+cor:
 
 **K-Means**
 
