@@ -91,7 +91,9 @@ show_on_geo_net(map,s_data,cat_filter,div_desc=F,filename)
 
 ![](fig/Cat-Year.png)
 decline in crime ?
+the year 2009 is shot of a month (July) in average there is 8,482 crimes each month, thus in total 2009 will have ~ 101,784 crimes
 Conclusion
+![](fig/declineCrime.png)
 
 ![](fig/Month.png)
 Association of crime and month?
@@ -115,6 +117,7 @@ Is there a different geographical distribution for different crimes in the same 
 ![](fig/drug_POSSESSION.OF.MARIJUANA.png)
 
 **K-Means**
+
 Is there similar crime clusters across SF?
 ![](fig/gCluster.png)
 ![](fig/gClusterBarPlot.png)
