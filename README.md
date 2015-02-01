@@ -137,10 +137,11 @@ as we already come to understand, the majority of the crimes are theft and non-c
 ![](fig/Cat-DaysFreq.png)
 here we are looking on the frequency on each crime over all days, and we can interesting things, it looks like we have 3 crime clusters:
 
-	* this group (Weapon laws until white collar) are less chance to happen over the weekend.
-	* this group (theft until alcohol related) is the opposite of the first group, with an increase over the weekend
-	* sex is an outlier with a strong rise from Tue though Thur and low chance in other days
-this is very cool and it makes sense except the sex crimes...
+1. this group (Weapon laws until white collar) are less chance to happen over the weekend.
+2. this group (theft until alcohol related) is the opposite of the first group, with an increase over the weekend
+3. sex is an outlier with a strong rise from Tue though Thur and low chance in other days
+
+this is very cool and it makes sense except the sex crimes.
 Conclusion:
 The police should know what crimes to expect each day and build its force accordantly. 
 
@@ -152,8 +153,18 @@ Here is the different categories and there different hour distributions:
 ![](fig/multiCat_Time.png)
 as we can see, most crimes take place from noom till the early night, crimes that are different are:
 
-	* sex and vandalism are more from after noon till night
-	* non-criminal, white collar and trespass take place in early morning till after noon
+1. sex and vandalism are more from after noon till night
+2. non-criminal, white collar and trespass take place in early morning till after noon
+
+I will conclude the segment will other things about association of crime category and other parameters:
+![](fig/Cat-PdDistrict.png)
+As we can see and already know, theft and non-criminal are the majority of police business. this is true for all stations and in particular  to the most active ones southern are mission, with oner expectation of drugs and tenderloin station.
+If we look at the frequency of crime over the stations:
+![](fig/Cat-PdDistrictFreq.png)
+we see that most sex crimes are handled by mission station, and this is also the case with drugs and tenderloin station although mission and southern  are also very active.
+beyview and ingleside deal more with weapon laws and family issues then others.
+
+another final thing that I tried to do is to 
 
 **Based on geography**
 ![](fig/ROBBERY.png)
