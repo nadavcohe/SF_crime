@@ -81,7 +81,7 @@ show_on_geo_net(map,s_data,cat_filter,div_desc=F,filename)
 ```
 
 #Results
-
+**Based of numbers**
 ![](fig/Year.png)
 (one month in 09 is missing)
 
@@ -99,4 +99,12 @@ show_on_geo_net(map,s_data,cat_filter,div_desc=F,filename)
 
 ![](fig/Cat-TimeFreq.png)
 
+**Based of geography**
+![](fig/ROBBERY.png)
 
+![](fig/drug_POSSESSION.OF.BASE.ROCK.COCAINE.FOR.SALE.png)
+![](fig/drug_POSSESSION.OF.MARIJUANA.png)
+
+*K-Means*
+
+#Other directions
