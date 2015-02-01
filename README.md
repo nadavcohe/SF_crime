@@ -164,13 +164,25 @@ If we look at the frequency of crime over the stations:
 we see that most sex crimes are handled by mission station, and this is also the case with drugs and tenderloin station although mission and southern  are also very active.
 beyview and ingleside deal more with weapon laws and family issues then others.
 
-another final thing that I tried to do is to 
+Another final thing that I tried to do is to find out if I can predict if a crime had a resolution, to do that I used bagging,
+and got 88% accuracy, I didn't have time to investigate that feature help to achieve this results 
 
 **Based on geography**
+One thing that was interesting to me is what can I learn from the geographical of crime.
+I build a grid of points all across SF and associated each crime to the nearest point to him:
+![](fig/grid.png)
+his is all the crimes on the grid:
+![](fig/gridAllCrime.png)
+are you can see, most crime takes place in the northern east of the city, this is known to be the more active side of the city:
+[http://web.fg.tp.edu.tw/~earth/vision/study/study06/HK/media/GoogleEarth/San%20Francisco%20project/images/Untitled-1.jpg](http://web.fg.tp.edu.tw/~earth/vision/study/study06/HK/media/GoogleEarth/San%20Francisco%20project/images/Untitled-1.jpg)
+[http://static.businessinsider.com/image/53ee18ae69bedd0115d39543/image.jpg](http://static.businessinsider.com/image/53ee18ae69bedd0115d39543/image.jpg)
+
 ![](fig/ROBBERY.png)
 Is there a different geographical distribution for different crimes in the same  Category?
 ![](fig/drug_POSSESSION.OF.BASE.ROCK.COCAINE.FOR.SALE.png)
 ![](fig/drug_POSSESSION.OF.MARIJUANA.png)
+
+Distance from police stations:
 
 **K-Means**
 
