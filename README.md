@@ -7,8 +7,8 @@
 1. Background
 2. Introduction to data set
 3. Results 
-  * Based of numbers
-  * Based of geography
+  * Based on numbers
+  * Based on geography
 4. Other directions
 
 #Introduction to data set
@@ -81,7 +81,7 @@ show_on_geo_net(map,s_data,cat_filter,div_desc=F,filename)
 ```
 
 #Results
-**Based of numbers**
+**Based on numbers**
 ![](fig/Year.png)
 (one month in 09 is missing)
 
@@ -99,12 +99,21 @@ show_on_geo_net(map,s_data,cat_filter,div_desc=F,filename)
 
 ![](fig/Cat-TimeFreq.png)
 
-**Based of geography**
+**Based on geography**
 ![](fig/ROBBERY.png)
 
 ![](fig/drug_POSSESSION.OF.BASE.ROCK.COCAINE.FOR.SALE.png)
 ![](fig/drug_POSSESSION.OF.MARIJUANA.png)
 
-*K-Means*
+**K-Means**
+![](fig/gCluster.png)
+![]((fig/gClusterBarPlot.png)
+
+#Things that didn't work
+1. KNN
+2. Logistic regression
 
 #Other directions
+1. Bayesian network
+2. finding more biases in the data
+3. crossing with other DB (airbnb, poverty, health, temperature, court)
