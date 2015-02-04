@@ -212,6 +212,7 @@ kmeans_on_map <- function(map,s_data,prop=F,filename=""){
   }else{
     tableForKM=(table(s_data$Cell,s_data$Category))
   }
+  tableForKM=log10(1+tableForKM);
   tableKM=kmeans(tableForKM,centers = 6)$cluster
   tableKM=cbind(t(matrix(as.numeric(unlist(strsplit(names(tableKM),","))),nrow = 2,ncol = length(tableKM))),cluster=as.numeric(tableKM))
   tableKM=data.frame(x=xtable[tableKM[,1]],y=ytable[tableKM[,2]],class=tableKM[,3])
@@ -220,7 +221,7 @@ kmeans_on_map <- function(map,s_data,prop=F,filename=""){
   png(filename =paste0(filename,"BarPlot",".png"),1000,1000 )
   par(mfrow=c(2,3))
   for (i in 1:6){
-    barplot(colMeans(tableForKM[which(tableKM$class==i),]),main=paste0("Class-",i),las=2)
+    barplot(colMeans(tableForKM[which(tableKM$class==i),]),main=paste0("Class-",i),las=2,ylim=c(0,0.25),cex.names = 1.4)
   }
   dev.off()
 }
