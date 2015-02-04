@@ -210,12 +210,7 @@ It seems reasonable for the police to patrol those locations more than often tha
 To conclude my work I asked if there are crime clusters across geographic locations SF?
 To answer that, I used the division of SF map into bins (~100M), and counted the number of crimes in each bin. The distribution of crimes at the been was considered a vector in R^13, and k-mean algorithm was used to cluster the bins.
 The motivation is that points with higher counts of crimes will be closer to each other (because of the structure of the L2 norm), while we also address the different distribution of crimes in each bin. 
-After running the k-means twice:
-Once for raw count:
-![](fig/gCluster.png)
-Here we can see each cluster crime distribution (each colour represent a different plot):
-![](fig/gClusterBarPlot.png)
-And another for proportion of crime in the point :
+After running the k-means, this is the clustering of crime that I got according to proportion of crime in the point :
 ![](fig/gClusterFreq.png)
 Here we can see each cluster crime distribution:
 ![](fig/gClusterBarPlotFreq.png)
